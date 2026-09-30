@@ -155,7 +155,6 @@ layered-roadmap-skill/
 │       ├── roadmap.example.json     # рабочий пример карты
 │       └── templates/               # вставки в AGENTS.md, README.md, сессию и git-хук
 ├── layered-roadmap.skill            # собранный пакет для загрузки одним файлом
-├── roadmap-architect.skill          # предыдущая версия скилла (оставлена для истории)
 └── docs/preview.png                 # скриншот доски
 ```
 
@@ -169,7 +168,7 @@ python3 layered-roadmap/scripts/pack.py layered-roadmap layered-roadmap.skill
 
 ## Чем отличается от предыдущей версии
 
-В репозитории лежит `roadmap-architect.skill` — первая версия. Новая отличается тем, что её модель проверена на реальном проекте (67 блоков, 297 модулей):
+Это вторая версия скилла: первая (`roadmap-architect`) строила карту и на этом останавливалась. Новая отличается тем, что её модель проверена на реальном проекте (67 блоков, 297 модулей):
 
 | | roadmap-architect | layered-roadmap |
 |---|---|---|
