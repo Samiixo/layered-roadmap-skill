@@ -726,8 +726,12 @@ def main():
             print("карта прошла проверку")
         return 0
 
-    html_path = Path(args.html) if args.html else src.parent.parent / "ROADMAP.html"
-    md_path = Path(args.md) if args.md else src.parent / "ROADMAP.md"
+    # доска ложится в корень проекта, если карта в docs/, иначе рядом с картой;
+    # сводка всегда рядом с картой
+    parent = src.parent
+    default_html = (parent.parent if parent.name in ("docs", "doc") else parent) / "ROADMAP.html"
+    html_path = Path(args.html) if args.html else default_html
+    md_path = Path(args.md) if args.md else parent / "ROADMAP.md"
 
     html_path.write_text(board_html(rmap, stats, current, stages, reserve_by, totals), encoding="utf-8")
 
