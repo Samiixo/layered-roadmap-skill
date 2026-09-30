@@ -1,0 +1,8 @@
+# Единые переводы строк: shell-скрипты и Python не должны получать CRLF на Windows,
+# иначе хук падает с «bad interpreter».
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.skill binary
+*.zip binary

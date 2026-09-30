@@ -1,0 +1,37 @@
+#!/bin/sh
+# Гейт карты развития перед коммитом.
+# Срабатывает, только если в коммит попала карта, её сводка, доска или генератор.
+# Ловит расхождения: блок заявлен «собран», а модуль «не начат»; битые зависимости; дубли id;
+# перенос без указания слоя.
+#
+# Отключить на время:  git commit --no-verify
+# Отключить совсем:    git config --unset core.hooksPath
+# Включить снова:      git config core.hooksPath .githooks
+#
+# Подставь свои пути, если карта лежит не в docs/.
+
+MAP="docs/roadmap.json"
+BUILDER="scripts/build_roadmap.py"
+
+staged=$(git diff --cached --name-only 2>/dev/null || true)
+[ -z "$staged" ] && exit 0   # не репозиторий или пустая сцена — не мешаем
+
+case "$staged" in
+  *"$MAP"*|*"$BUILDER"*|*ROADMAP.md*|*ROADMAP.html*)
+    if ! command -v python3 >/dev/null 2>&1 && ! command -v python >/dev/null 2>&1; then
+      echo "⚠️  python не найден — проверка карты пропущена"
+      exit 0
+    fi
+    PY=$(command -v python3 || command -v python)
+    if ! "$PY" "$BUILDER" "$MAP" --check; then
+      echo ""
+      echo "❌ Карта развития не прошла проверку — коммит остановлен."
+      echo "   Почини $MAP (статус модуля и evidence), затем:"
+      echo "   python3 $BUILDER $MAP            — пересоберёт доску и сводку"
+      echo "   python3 $BUILDER $MAP --next     — покажет текущий слой и следующий блок"
+      exit 1
+    fi
+    ;;
+esac
+
+exit 0
