@@ -91,6 +91,18 @@ def validate(rmap):
             if b.get("status") == "paused" and not b.get("blockedBy"):
                 problems.append(f"{b['id']}: статус «на паузе» без blockedBy")
             check_status(b, b["id"])
+            # block_status() пересчитывает статус из модулей и молча подменяет его на доске,
+            # поэтому расхождение видно только здесь: JSON остаётся источником, который читает
+            # агент без генератора.
+            if (b.get("status") != "paused"
+                    and b.get("horizon") not in ("deferred", "beyond")
+                    and b.get("modules")):
+                computed = rollup(b["modules"])
+                if computed != b.get("status"):
+                    notes.append(
+                        f"{b['id']}: статус в JSON «{LABELS.get(b['status'], b['status'])}» не равняется "
+                        f"свёртке модулей «{LABELS.get(computed, computed)}» — на доске блок показан "
+                        f"как {LABELS.get(computed, computed)}, правь roadmap.json")
             for m in b.get("modules", []):
                 if not m["id"].startswith(b["id"] + "."):
                     problems.append(f"{m['id']}: id не совпадает с блоком {b['id']}")

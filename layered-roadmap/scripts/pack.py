@@ -8,7 +8,10 @@ import zipfile
 from pathlib import Path
 
 SKIP_DIRS = {"__pycache__", ".git", "node_modules", ".DS_Store", ".idea", ".vscode"}
-SKIP_FILES = {".DS_Store", "Thumbs.db"}
+# ROADMAP.html и ROADMAP.md внутри папки скилла — это сборка примера карты (генерируются
+# build_roadmap.py рядом с .json), в доставке их быть не должно: .gitignore их режет,
+# и упаковщик режет тем же списком имён.
+SKIP_FILES = {".DS_Store", "Thumbs.db", "ROADMAP.html", "ROADMAP.md"}
 DESC_LIMIT = 1024  # лимит описания в диагностике скиллов
 
 
